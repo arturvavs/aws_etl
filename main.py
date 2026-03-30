@@ -28,7 +28,7 @@ def extract_data(sql, chunk_size, filename, bucket_name, bucket_folder, folder):
     
     finally:
         ORACLE_DB.disconnect()
-# %%
+        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--sql_file", type=str)
@@ -43,15 +43,3 @@ if __name__ == "__main__":
 
     sql = load_sql(args.sql_file)
     extract_data(sql, args.chunk_size, args.filename, args.bucket_name, args.bucket_folder, args.folder)
-
-
-# %%
-sql = load_sql('movimento_estoque.sql')
-
-extract_data(
-    sql=sql, 
-    chunk_size=30000, 
-    filename='movimento_estoque', 
-    bucket_name='datalake-raw-arturvavs', 
-    bucket_folder='supply/raw/movimento_estoque/2026',
-    folder='Output/')
