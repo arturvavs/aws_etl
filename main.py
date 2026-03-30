@@ -1,3 +1,4 @@
+# %%
 from Classes.OracleDatabase import ORACLE_DB
 from Classes.Sender import Sender
 from Queries.Queries import *
@@ -27,14 +28,14 @@ def extract_data(sql, chunk_size, filename, bucket_name, bucket_folder, folder):
     
     finally:
         ORACLE_DB.disconnect()
-
+# %%
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--sql_file", type=str)
     parser.add_argument("--filename", type=str)
-    parser.add_argument("--chunk_size", type=int)
+    parser.add_argument("--chunk_size", type=int, default=10000)
     parser.add_argument("--bucket_name", type=str, default= 'datalake-raw-arturvavs')
-    parser.add_argument("--bucket_folder", type=str)
+    parser.add_argument("--bucket_folder", type=str, default= 'supply/raw/movimento_estoque/2026')
     parser.add_argument("--folder", type=str, default='Output/')
 
     args = parser.parse_args()
@@ -42,3 +43,15 @@ if __name__ == "__main__":
 
     sql = load_sql(args.sql_file)
     extract_data(sql, args.chunk_size, args.filename, args.bucket_name, args.bucket_folder, args.folder)
+
+
+# %%
+sql = load_sql('movimento_estoque.sql')
+
+extract_data(
+    sql=sql, 
+    chunk_size=30000, 
+    filename='movimento_estoque', 
+    bucket_name='datalake-raw-arturvavs', 
+    bucket_folder='supply/raw/movimento_estoque/2026',
+    folder='Output/')

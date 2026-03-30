@@ -7,6 +7,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 import time
+from tqdm import tqdm
 
 load_dotenv()
 
@@ -89,7 +90,7 @@ class OracleDatabase:
         batch_count = 0
 
         try:
-            for table in batches:
+            for table in tqdm(batches):
                 if writer is None:
                     writer = pq.ParquetWriter(output_path, table.schema)
                 writer.write_table(table)
@@ -98,6 +99,8 @@ class OracleDatabase:
         finally:
             if writer:
                 writer.close()
+            
+        self.disconnect()
 
         elapsed = time.perf_counter() - start
         logger.info(f"Batches: {batch_count} | Linhas: {total_rows} | Tempo: {elapsed:.2f}s | Tabela: {file_name}")
